@@ -214,6 +214,7 @@ def get_symbol(args, arg_params, aux_params):
     assert m>=0.0
     assert m<(math.pi/2)
     _weight = mx.symbol.L2Normalization(_weight, mode='instance')
+    #先将特征乘以scale
     nembedding = mx.symbol.L2Normalization(embedding, mode='instance', name='fc1n')*s
     fc7 = mx.sym.FullyConnected(data=nembedding, weight = _weight, no_bias = True, num_hidden=args.num_classes, name='fc7')
     zy = mx.sym.pick(fc7, gt_label, axis=1)
@@ -233,6 +234,7 @@ def get_symbol(args, arg_params, aux_params):
     sin_t = mx.sym.sqrt(body)
     new_zy = cos_t*cos_m
     b = sin_t*sin_m
+    #得到cos(the+m)
     new_zy = new_zy - b
     new_zy = new_zy*s
     if args.easy_margin:
